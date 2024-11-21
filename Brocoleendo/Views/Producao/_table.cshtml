@@ -1,0 +1,22 @@
+﻿@using Brocoleendo.Model
+@model List<AcaoQuadrante>
+
+<div>
+    <table class="table table-condensed"> 
+        <tr>
+            <th>Ação</th>
+            <th>Data/Hora</th>
+            <th>Funcionario</th>
+            <th>Material usado</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th>@item.DS_ACAO</th>
+                <th>@item.DT_ACAO</th>
+                <th>@item.NOME_FUNC</th>
+                <th>@item.DS_MATERIAL</th>
+            </tr>
+        }
+    </table>
+</div>

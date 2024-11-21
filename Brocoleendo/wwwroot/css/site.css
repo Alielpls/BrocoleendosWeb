@@ -1,0 +1,135 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.modal {
+    z-index: 1050 !important; /* Aumente o z-index da modal */
+}
+
+.modal-backdrop {
+    z-index: 1040 !important; /* Garante que o backdrop fique atrás da modal */
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.board-basico {
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.modulo {
+    padding-top: 45px;
+    padding-bottom: 45px;
+
+
+    background-color: #8D9957;
+    border-radius: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: black;
+    
+}
+
+.contornadoTeste {
+    border-color: blue;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.login-bloco {
+    background-color: white;
+    border-radius: 20px;
+    padding: 15px;
+}
+
+.txt-title {
+    color: white;
+    text-align: center;
+    font-family: serif;
+    font-size: 70px;
+}
+
+.txt-subtitle {
+    color: #8D9957;
+    text-align: center;
+    font-size: 30px;
+}
+
+.txt-text {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+}
+
+.btn-green {
+    color: white;
+    border-radius: 9px;
+    background-color: #8D9957;
+    border: 1px solid #8D9957;
+    min-width: 100%;
+    text-align: center;
+}
+
+    .btn-green:hover {
+        background-color: #707A45;
+    }
+
+    .btn-green:active {
+        box-shadow: #161C0D;
+        background-color: #343817;
+    }
+
+.form-control {
+    border-radius:4px;
+}
+
+.ctt-bloco{
+    border:1px solid black;
+    padding-top:10px;
+    border-radius:4px;
+    margin:5px;
+}
+
+.prod-bloco {
+    border: 1px solid black;
+    border-radius: 4px;
+    margin: 5px;
+    padding:10px;
+}
+
+.prod-img {
+    border-radius: 7px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+}
+
+.lote-img {
+    border-radius: 7px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+    width:150px;
+    height:150px;
+    cursor:pointer;
+}

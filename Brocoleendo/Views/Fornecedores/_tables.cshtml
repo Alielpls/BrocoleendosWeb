@@ -1,0 +1,24 @@
+﻿@model Fornecedor
+
+<div>
+    <div>
+        <h4>Detalhes do Fornecedor</h4>
+    </div>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>@Html.DisplayNameFor(model => model.DS_Fornecedor)</dt>
+            <dd>@Html.DisplayFor(model => model.DS_Fornecedor)</dd>
+            <dt>@Html.DisplayNameFor(model => model.DS_Representante)</dt>
+            <dd>@Html.DisplayFor(model => model.DS_Representante)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+            <dd>@Html.DisplayFor(model => model.Email)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Documento)</dt>
+            <dd>@Html.DisplayFor(model => model.Documento)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Telefone)</dt>
+            <dd>@Html.DisplayFor(model => model.Telefone)</dd>
+    </div>
+    <div>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+    </div>
+</div>

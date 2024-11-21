@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 style="font-family:serif; color:white" class="display-4">Brocoleendo</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <a asp-controller="Fornecedores" asp-action="Index" class="text-dark nav-link">
+            <div class="modulo">
+                <p>Fornecedores</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <a asp-controller="Producao" asp-action="Index" class="text-dark nav-link">
+            <div class="modulo">
+                Produção
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <a asp-controller="Produto" asp-action="Index" class="text-dark nav-link">
+            <div class="modulo">
+                Produtos
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <div class="modulo">
+            Insumos
+        </div>
+    </div>
+
+</div>
+
+<div class="row" style="margin-top:25px; align-items:center">
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <div class="modulo">
+            Relatórios
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <div class="modulo">
+            Compra
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-lg-3 col-md-3">
+        <div class="modulo">
+            Venda
+        </div>
+    </div>
+
+</div>
+

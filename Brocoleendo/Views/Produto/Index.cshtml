@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model List<Produto>
+<div style="background-color:white">
+
+    <div class="row" style="padding:10px">
+        <div class="col-xs-1 col-md-1 col-sm-1">
+            <a asp-controller="Home" asp-action="Index" class="fa fa-2x fa-chevron-left text-dark nav-link" style="padding-left:10px"></a>
+        </div>
+
+        <div class="col-xs-10 col-md-10 col-sm-10">
+            <p style="text-align:center; font-size:25px;" class="form-control"> <b>@ViewData["Title"]</b></p>
+        </div>
+
+        <div class="col-xs-1 col-md-1 col-sm-1">
+            <a asp-controller="Cadastros" asp-action="Index" class="fa fa-2x fa-pencil-square-o text-dark nav-link" style="padding-left:10px"></a>
+        </div>
+    </div>
+
+    <div class="row" style="padding:10px;">
+        @foreach (var item in Model)
+        {
+            <div class="col-xs-6 col-lg-3 col-md-3">
+                <img title="img" src="@item.Url_Img" width="170px" height="150px" class="prod-img" />
+                <br />
+                <p style="text-align:center; margin-top:-15px;">@(item.DS_PRODUTO) - R$ @(item.PRECO)/Kg</p>
+                @if(item.SALDO == 0)
+                {
+                    <p class="text-danger" style="text-align:center; margin-top:-15px;"> Sem saldo </p>
+                }
+                else
+                {
+                    <p class="text-success" style="text-align:center; margin-top:-15px;"> @item.SALDO Kg - Em estoque </p>
+                }
+            </div>
+            <br />
+
+        }
+    </div>
+</div>
