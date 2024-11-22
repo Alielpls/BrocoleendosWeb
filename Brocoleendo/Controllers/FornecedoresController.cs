@@ -6,7 +6,7 @@ namespace Brocoleendo.Controllers
 {
     public class FornecedoresController : Controller
     {
-        Uri baseAddress = new Uri("https://localhost:7196/");
+        Uri baseAddress = new Uri("https://webapibrocoleendos20241121232909.azurewebsites.net/");
         private readonly HttpClient _client;
 
         public FornecedoresController()
