@@ -10,6 +10,7 @@ namespace Brocoleendo.Controllers
     {
 
         Uri baseAddress = new Uri("https://webapibrocoleendos20241121232909.azurewebsites.net/");
+        //Uri baseAddress = new Uri("https://localhost:7196/"); 
         private readonly HttpClient _client;
 
         public ProducaoController()
@@ -38,6 +39,7 @@ namespace Brocoleendo.Controllers
             return View(Quadrantes);
         }
 
+        
         public ActionResult Details(string DS)
         {
             if (DS == null)

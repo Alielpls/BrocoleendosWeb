@@ -1,8 +1,7 @@
-﻿
-@model List<Producao>;
+﻿@model List<Producao>;
 
 
-<div style="background-color:white" class="row">
+<div style="background-color:white">
     <div class="row" style="padding:10px">
         <div class="col-xs-1 col-md-1 col-sm-1">
             <a asp-controller="Home" asp-action="Index" class="fa fa-2x fa-chevron-left text-dark nav-link" style="padding-left:10px"></a>
@@ -18,38 +17,48 @@
         </div>
     </div>
 
-    <div class="col-xs-12 col-md-6 col-sm-6">
-        <div class="row">
-            @for (int i = 0; i < Model.Count(); i++)
-            {
-                <div class="col-xs-6 col-md-4 col-sm-4">
-                    @if (Model.ElementAt(i).ST_USO)
-                    {
-                        <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante">
-                            <img src="https://cdn.noticiasagricolas.com.br/dbimagens/thumbs/320x240-ar/062fd8a45806c49213c00fe23935530d.jpg" class="lote-img" />
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante">
-                            <img src="https://www.gramasp.com.br/fornecedor-de-gramas/imagens/terra-adubada-para-grama-esmeralda.jpg" class="lote-img" />
-                        </a>
-                    }
-                    <br />
-                    <p style="text-align:center">@Model.ElementAt(i).DS_Quadrante</p>
-                </div>
+    <div class="row">
+        <div class="col-xs-4 col-md-6 col-sm-6">
+            <div class="row">
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <div class="col-xs-6 col-md-4 col-sm-4">
+                        @if (Model.ElementAt(i).ST_USO)
+                        {
+                            <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante" href="#" data-toggle="modal" data-target="#myModal">
+                                <img src="https://cdn.noticiasagricolas.com.br/dbimagens/thumbs/320x240-ar/062fd8a45806c49213c00fe23935530d.jpg" class="lote-img" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante" href="#" data-toggle="modal" data-target="#myModal">
+                                <img src="https://www.gramasp.com.br/fornecedor-de-gramas/imagens/terra-adubada-para-grama-esmeralda.jpg" class="lote-img" />
+                            </a>
+                        }
+                        <br />
+                        <p style="text-align:center">@Model.ElementAt(i).DS_Quadrante</p>
+                    </div>
 
-            }
+                }
+            </div>
+
         </div>
 
+        <div id="detailsPlace" class="col-xs-7 col-md-6 col-sm-6" style="display:none">
+        </div>
     </div>
-
-    <div id="detailsPlace" class="col-xs-12 col-md-6 col-sm-6" style="display:none">
-      
-    </div>
-
-
 </div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -57,15 +66,19 @@
             var buttonClicked = $(this);
             var DS_id = buttonClicked.attr('data-id');
             console.log(DS_id);
-            
+
+            // $("#modalContent").load("/Producao/Details/" + DS_id,
+            //     function () {
+            //         $("#myModal").modal("show");
+            //     });
 
             $.ajax({
                 url: 'Producao/Details',
                 type: 'POST',
                 data: { DS: DS_id },
                 success: function (partialView) {
-                    $('#detailsPlace').html(partialView);
-                    $('#detailsPlace').show();
+                    $('#modalContent').html(partialView);
+                    $('#myModal').modal("show");
                 }
             });
         });

@@ -65,7 +65,7 @@
             var login = $("#login").val();
             var senha = $("#senha").val();
 
-            if(login == ""){
+            if (login == "") {
                 $("#login").focus();
                 return;
             }
@@ -75,13 +75,12 @@
                 return;
             }
 
-            
+
 
             var jsonData = {
                 Login: login,
                 Senha: senha
             };
-            console.log(jsonData);
 
             $.ajax({
                 type: "POST",
@@ -90,18 +89,16 @@
                 dataType: "json",
                 data: JSON.stringify(jsonData),
                 success: function (data) {
-                    if (data == null) {
-                        toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Erro ao tentar logar, perda de conexão.</b></h4>');
+                    var json = $.parseJSON(data);
+                    if (json.iD_FUNC == 0) {
+                        toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Login ou senha incorretos</b></h4>');
                     }
                     else {
-                        console.log(data);
-                        var json = $.parseJSON(data);
-                        console.log(json);
                         localStorage.setItem("FuncionarioID", json.iD_FUNC);
                         localStorage.setItem("FuncionarioNome", json.nomE_FUNC);
                         toasterSuccess('<h4><i class=\"fa fa-check\">&nbsp;</i><b>Logado com sucesso!</b></h4>');
                         var loginRedirect = setTimeout(function () {
-                            window.url("");
+                            window.location.replace("/");
                         }, 4900);
 
                     }
