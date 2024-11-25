@@ -1,9 +1,67 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<Venda>
 
-<div>
-    <p class="centered text-bg-light text-success"> VENDAS</p>
+<div class="board-basico">
+    <div class="row" style="padding:10px">
+        <div class="col-xs-1 col-md-1 col-sm-1">
+            <a asp-controller="Home" asp-action="Index" class="fa fa-2x fa-chevron-left text-dark nav-link" style="padding-left:10px"></a>
+        </div>
+
+        <div class="col-xs-10 col-md-10 col-sm-10">
+            <p style="text-align:center; font-size:25px;" class="form-control"> <b>@ViewData["Title"]</b></p>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-10 col-md-10 col-sm-10">
+            <table class="table">
+                <tr>
+
+                    <th class="text-center">
+                        Cód. venda
+                    </th>
+                    <th>
+                        Funcionário
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                    <th>
+                        Forma de pagamento
+                    </th>
+                    <th>
+                        Valor total
+                    </th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td class="text-center">
+                            @item.ID_VENDA
+                        </td>
+                        <td>
+                            @item.NOME_FUNC
+                        </td>
+                        <td>
+                            @item.DT_VENDA.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @item.FORMA_PGTO
+                        </td>
+                        <td>
+                           @item.PRECO_TOT.ToString("C")
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+        <div class="col-2 col-md-2 col-sm-2">
+            <a asp-action="new" class="btn btn-success" style="width:60%"><i class="fa fa-plus"></i> </a>
+        </div>
+    </div>
+
 </div>

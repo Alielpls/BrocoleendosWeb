@@ -1,0 +1,54 @@
+﻿@using Brocoleendo.ViewModel;
+@model List<VendaProduto>
+
+
+<div>
+    <table class="table">
+        <tr>
+            <th class="text-center">
+                Codigo Prod.Venda
+            </th>
+            <th>
+                Produto
+            </th>
+            <th>
+                Preço unit.
+            </th>
+            <th>
+                Kg
+            </th>
+            <th>
+                Preço total
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="text-center">
+                    @item.ID_VENDA_PRODUTO
+                </td>
+                <td>
+                    @item.DS_PRODUTO
+                </td>
+                <td>
+                    @item.PRECO_UNI.ToString("C")
+                </td>
+                <td>
+                    @item.KG_PRODUTO
+                </td>
+                <td>
+                    @item.PRECO_TOT.ToString("C")
+                </td>
+
+                <td>
+                    <a id="deletItem" data-iv_venda="@item.ID_VENDA_PRODUTO" data-id="@item.ID_PRODUTO" data-kg="@item.KG_PRODUTO.ToString().Replace(',', '.') " class="btn btn-outline-danger"> <i class="fa fa-trash-o"></i> </a>
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@* <script src="~/js/Venda/table.js"></script> *@

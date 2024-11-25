@@ -1,4 +1,4 @@
-﻿@model List<Producao>;
+﻿@model List<Quadrante>;
 
 
 <div style="background-color:white">
@@ -18,20 +18,20 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-4 col-md-6 col-sm-6">
+        <div class="col-4 col-sm-4 col-md-6">
             <div class="row">
                 @for (int i = 0; i < Model.Count(); i++)
                 {
-                    <div class="col-xs-6 col-md-4 col-sm-4">
+                    <div class="col-12 col-sm-12 col-md-4">
                         @if (Model.ElementAt(i).ST_USO)
                         {
-                            <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante" href="#" data-toggle="modal" data-target="#myModal">
+                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" href="#">
                                 <img src="https://cdn.noticiasagricolas.com.br/dbimagens/thumbs/320x240-ar/062fd8a45806c49213c00fe23935530d.jpg" class="lote-img" />
                             </a>
                         }
                         else
                         {
-                            <a class="details" data-id="@Model.ElementAt(i).DS_Quadrante" href="#" data-toggle="modal" data-target="#myModal">
+                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" href="#">
                                 <img src="https://www.gramasp.com.br/fornecedor-de-gramas/imagens/terra-adubada-para-grama-esmeralda.jpg" class="lote-img" />
                             </a>
                         }
@@ -44,20 +44,14 @@
 
         </div>
 
-        <div id="detailsPlace" class="col-xs-7 col-md-6 col-sm-6" style="display:none">
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div id="modalContent"></div>
+        <div class="col-8 col-sm-8 col-md-6">
+            <label for="detailsPlace" class="form-label"></label>
+            <div id="detailsPlace" style="display:none">
             </div>
         </div>
     </div>
 </div>
+
 
 
 <script type="text/javascript">
@@ -67,20 +61,81 @@
             var DS_id = buttonClicked.attr('data-id');
             console.log(DS_id);
 
-            // $("#modalContent").load("/Producao/Details/" + DS_id,
-            //     function () {
-            //         $("#myModal").modal("show");
-            //     });
-
             $.ajax({
                 url: 'Producao/Details',
                 type: 'POST',
-                data: { DS: DS_id },
+                data: { DS: parseInt(DS_id) },
                 success: function (partialView) {
-                    $('#modalContent').html(partialView);
-                    $('#myModal').modal("show");
+                    $('#detailsPlace').html(partialView);
+                    $('#detailsPlace').show();
+                    attachEventHandlers();
                 }
             });
         });
     });
+
+    function attachEventHandlers() {
+        console.log("aa");
+
+        $("#plusProducao").click(function () {
+
+            var jsonData = {
+                ID_PRODUCAO: 0, 
+                DT_PLANTIO: "2024-11-23T15:30:00",
+                DT_ESTIMADA: "2024-11-23T15:30:00",
+                DT_COLHEITA: "2024-11-23T15:30:00",
+                ID_LOCALIZACAO_LOTE: parseInt($(this).data("quadrante")), // obligated
+                ST_ATIVO: true,
+                ID_Produto: parseInt($("#ProdutoSelecionadoID").val()), // obligated
+                KG_RENDIDO: 0.0
+            };
+            console.log(jsonData);
+
+            $.ajax({
+                type: "POST",
+                url: "Producao/InsProducao",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(jsonData),
+                success: function (data) {
+                    var json = $.parseJSON(data);
+                    if (json == 0 || json == null) {
+                        toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Erro ao criar produção</b></h4>');
+                    }
+                    else {
+                        toasterSuccess('<h4><i class=\"fa fa-check\">&nbsp;</i><b> Produção criada com sucesso</b></h4>');
+                    }
+                },
+                error: function () { alert('Error') }
+            });
+
+            /* O QUE FAZER: conseguir atualizar o details pra quando você cria uma produção, ele indentifcar que mesmo sem ações, aquilo ali ta ativo e é pra aprecer igual na primeira parte do if da _table */
+
+            $.ajax({
+                url: 'Producao/Details',
+                type: 'POST',
+                data: { DS: $(this).data("quadrante") },
+                success: function (partialView) {
+                    console.log("parte 2 - ");
+                    $('#detailsPlace').html(partialView);
+
+                }
+            });
+
+        });
+
+
+
+        $("#finishProducao").click(function () {
+            CriarVenda();
+        });
+        $("#plplusProducaousVenda").click(function () {
+            CriarVenda();
+        });
+        
+        
+        
+        
+        
+    }
 </script>

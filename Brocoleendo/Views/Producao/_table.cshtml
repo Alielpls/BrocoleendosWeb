@@ -1,7 +1,7 @@
-﻿@using Brocoleendo.Model
-@model List<AcaoQuadrante>
+﻿@using Brocoleendo.ViewModel
+@model ProducaoViewModel
 
-@if (Model.Count > 0)
+@if (Model.AcaoQuadrantes.Count > 0)
 {
     <div>
         <h4 class="centered">Atividades realizadas</h4>
@@ -14,7 +14,7 @@
                 <th>Funcionario</th>
                 <th>Material usado</th>
             </tr>
-            @foreach (var item in Model)
+            @foreach (var item in Model.AcaoQuadrantes)
             {
                 <tr>
                     <th>@item.DS_ACAO</th>
@@ -26,11 +26,27 @@
         </table>
     </div>
     <div class="row">
-
-        <div></div>
+        <div class="col-12 col-sm-6 col-md-6">
+            <a id="plusAcao" class="btn btn-primary butn"> <i class="fa fa-plus"></i> </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-6">
+            <a id="finishProducao" class="btn btn-success butn"> <i class="fa fa-check"></i> </a>
+        </div>
     </div>
 }
 else
 {
-
+    <div class="row">
+        <div class="col-12 col-sm-12 col-md-12">
+            <a id="plusProducao" data-quadrante="@ViewData["Message"]" data-idQuadrante="@Convert.ToInt32(ViewData["ID"])" class="btn btn-success butn"> <i class="fa fa-plus"></i> </a>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12">
+            <select id="ProdutoSelecionadoID" class="form-control butn">
+                @foreach (var produto in Model.Produtos)
+                {
+                    <option value="@produto.ID_PRODUTO">@produto.DS_PRODUTO</option>
+                }
+            </select>
+        </div>
+    </div>
 }
