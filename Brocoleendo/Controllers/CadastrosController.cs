@@ -21,6 +21,7 @@ namespace Brocoleendo.Controllers
         {
             return View();
         }
+
         public ActionResult Produto()
         {
             Models.Produto produto = new Models.Produto();
@@ -35,11 +36,10 @@ namespace Brocoleendo.Controllers
             return View();
         }
 
-
         [HttpPost]
         public ActionResult InsProduto([FromBody] Produto produto)
         {
-            
+
             var jsonFunc = JsonConvert.SerializeObject(produto);
             var content = new StringContent(jsonFunc, Encoding.UTF8, "application/json");
 
@@ -55,5 +55,7 @@ namespace Brocoleendo.Controllers
 
             return Json(false);
         }
+
+
     }
 }
