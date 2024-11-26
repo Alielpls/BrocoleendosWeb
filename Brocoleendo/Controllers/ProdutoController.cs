@@ -39,22 +39,30 @@ namespace Brocoleendo.Controllers
             return View(produtos);
         }
 
-        [HttpPost]
-        public ActionResult Edit([FromBody] Produto produto)
+        
+        [Route("Produto/edit/{ID}")]
+        public ActionResult Edit(int ID)
         {
-            //produto vai ser pesquisado na função da API, o botão de editar só vai passar o ID no get, ai olink vai ficar edit/id
-            // e em AQUI NA EDIT algum lugar ele vai fazer a busca pra preencher o produto
+
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "DetailProduto/" + ID).Result;
+            Produto produto = new Produto();
+
+            if (response.IsSuccessStatusCode)
+            {
+                string data = response.Content.ReadAsStringAsync().Result;
+                produto = JsonConvert.DeserializeObject<Produto>(data);
+            }
 
             return View(produto);
         }
 
-        [HttpGet]
-        public ActionResult UpdtProduto(int id)
+        [HttpPost]
+        public ActionResult UpdtProduto([FromBody] Produto produto)
         {
             var jsonFunc = JsonConvert.SerializeObject(produto);
             var content = new StringContent(jsonFunc, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "updProduto", content).Result;
+            HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "updtProduto", content).Result;
 
 
             if (response.IsSuccessStatusCode)

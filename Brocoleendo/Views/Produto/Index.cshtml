@@ -30,7 +30,7 @@
                 {
                     <p class="text-success" style="text-align:center; margin-top:-15px;"> @item.SALDO Kg - Em estoque </p>
                 }
-                <a id="editProduto" data-idProduto="@item.ID_PRODUTO" class="btn btn-outline-info"> <i class="fa fa-2x fa-pencil-square-o"></i> </a>
+                <a id="editProduto" data-idproduto="@item.ID_PRODUTO" class="btn btn-outline-info"> <i class="fa fa-2x fa-pencil-square-o"></i> </a>
             </div>
             <br />
 
@@ -44,36 +44,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $(document).on("click", "#editProduto", function () {
-            var id = $(this).data('idProduto');
-            var nome = $("#txtDsProduto").val();
-            var preco = $("#txtPreco").val();
-            var Grupo = $("#ddlGrupo").val();
-            var Url_Img = $("#txtUrl_Img").val();
-
-            var jsonData = {
-                ID_PRODUTO: id,
-                DS_PRODUTO: nome,
-                Url_Img: Url_Img,
-                PRECO: preco,
-                SALDO: 0,
-                DS_GRUPO: 'none',
-                ID_GRUPO: Grupo,
-                ST_Ativo: true
-            };
-            console.log(jsonData);
-
-            $.ajax({
-                type: "POST",
-                url: "Produto/Edit",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                data: JSON.stringify(jsonData),
-                success: function (data) {
-                    window.location.href = '@Url.Action("Edit", "ProdutoController")';
-
-                },
-                error: function () { alert('Error') }
-            });
+            var id = $(this).data("idproduto");
+            console.log(id);
+            window.location.href = "Produto/Edit/" + id;
         });
     });
 </script>
