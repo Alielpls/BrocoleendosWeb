@@ -52,6 +52,22 @@ namespace Brocoleendo.Controllers
         }
 
 
+        [Route("Fornecedores/edit/{ID}")]
+        public ActionResult Edit(int ID)
+        {
+
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + $"DetailFornecedor/{ID}").Result;
+            Fornecedor fornecedor = new Fornecedor();
+            if (response.IsSuccessStatusCode)
+            {
+                string data = response.Content.ReadAsStringAsync().Result;
+                fornecedor = JsonConvert.DeserializeObject<Fornecedor>(data);
+            }
+
+            return View(fornecedor);
+        }
+
+
 
     }
 }

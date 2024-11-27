@@ -21,7 +21,12 @@
             <div class="col-xs-6 col-lg-3 col-md-3">
                 <img title="img" src="@item.Url_Img" width="170px" height="150px" class="prod-img" />
                 <br />
-                <p style="text-align:center; margin-top:-15px;">@(item.DS_PRODUTO) - R$ @(item.PRECO)/Kg</p>
+                
+                <p style="text-align:center; margin-top:-15px;">
+                    @(item.DS_PRODUTO) - R$ @(item.PRECO)/Kg
+                    <a id="editProduto" data-idproduto="@item.ID_PRODUTO" class="btn btn-outline-info"> <i class="fa fa-pencil-square-o"></i> </a>
+                </p>
+               
                 @if (item.SALDO == 0)
                 {
                     <p class="text-danger" style="text-align:center; margin-top:-15px;"> Sem saldo </p>
@@ -30,7 +35,6 @@
                 {
                     <p class="text-success" style="text-align:center; margin-top:-15px;"> @item.SALDO Kg - Em estoque </p>
                 }
-                <a id="editProduto" data-idproduto="@item.ID_PRODUTO" class="btn btn-outline-info"> <i class="fa fa-2x fa-pencil-square-o"></i> </a>
             </div>
             <br />
 

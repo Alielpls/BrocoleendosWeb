@@ -9,7 +9,7 @@
         public double SALDO { get; set; }
         public string DS_GRUPO { get; set; }
         public int ID_GRUPO { get; set; }
-        public bool ST_Ativo = true;
+        public bool ST_Ativo { get; set; }
 
 
 
