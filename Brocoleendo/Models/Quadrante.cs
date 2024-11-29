@@ -9,15 +9,6 @@
         public string DS_Produto { get; set; }
         public bool ST_Ativo { get; set; }
 
-        public Quadrante(int ID_Localizacao, string DS_Quadrante, bool ST_Uso, int ID_Producao, bool ST_Ativo)
-        {
-            this.ID_Localizacao_Lote = ID_Localizacao;
-            this.DS_Quadrante = DS_Quadrante;
-            this.ST_USO = ST_Uso;
-            this.ID_Producao = ID_Producao;
-            this.ST_Ativo = ST_Ativo;
-        }
-
 
     }
 }

@@ -25,13 +25,13 @@
                     <div class="col-12 col-sm-12 col-md-4">
                         @if (Model.ElementAt(i).ST_USO)
                         {
-                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" href="#">
+                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" data-producao="@Model.ElementAt(i).ID_Producao" href="#">
                                 <img src="https://cdn.noticiasagricolas.com.br/dbimagens/thumbs/320x240-ar/062fd8a45806c49213c00fe23935530d.jpg" class="lote-img" />
                             </a>
                         }
                         else
                         {
-                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" href="#">
+                            <a class="details" data-id="@Model.ElementAt(i).ID_Localizacao_Lote" data-produto="@Model.ElementAt(i).DS_Produto" data-producao="@Model.ElementAt(i).ID_Producao" href="#">
                                 <img src="https://www.gramasp.com.br/fornecedor-de-gramas/imagens/terra-adubada-para-grama-esmeralda.jpg" class="lote-img" />
                             </a>
                         }
@@ -59,12 +59,23 @@
         $('.details').click(function () {
             var buttonClicked = $(this);
             var DS_id = buttonClicked.attr('data-id');
-            console.log(DS_id);
+
+            var jsonQuadrante = {
+                ID_Localizacao_Lote: DS_id,
+                DS_Quadrante: "AA",
+                ST_USO: true,
+                ID_Producao: $(this).data('producao'),
+                DS_Produto: $(this).data('produto'),
+                ST_Ativo: true
+            };
+
+            console.log(jsonQuadrante);
 
             $.ajax({
                 url: 'Producao/Details',
                 type: 'POST',
-                data: { DS: parseInt(DS_id) },
+                contentType: 'application/json',
+                data: JSON.stringify(jsonQuadrante),
                 success: function (partialView) {
                     $('#detailsPlace').html(partialView);
                     $('#detailsPlace').show();
@@ -77,18 +88,13 @@
     function attachEventHandlers() {
         console.log("aa");
 
-        $("#plusProducao").click(function () {
+        $("#plusProducao").on('click',function () {
 
             var jsonData = {
-                ID_PRODUCAO: 0, 
-                DT_PLANTIO: "2024-11-23T15:30:00",
-                DT_ESTIMADA: "2024-11-23T15:30:00",
-                DT_COLHEITA: "2024-11-23T15:30:00",
-                ID_LOCALIZACAO_LOTE: parseInt($(this).data("quadrante")), // obligated
-                ST_ATIVO: true,
-                ID_Produto: parseInt($("#ProdutoSelecionadoID").val()), // obligated
-                KG_RENDIDO: 0.0
+                ID_LOCALIZACAO_LOTE: parseInt($(this).data("idquadrante")), // obligated
+                ID_Produto: parseInt($("#ProdutoSelecionadoID").val()) // obligated
             };
+
             console.log(jsonData);
 
             $.ajax({
@@ -104,22 +110,11 @@
                     }
                     else {
                         toasterSuccess('<h4><i class=\"fa fa-check\">&nbsp;</i><b> Produção criada com sucesso</b></h4>');
+                        $('#detailsPlace').html('');
+                        window.location.href = "";
                     }
                 },
                 error: function () { alert('Error') }
-            });
-
-            /* O QUE FAZER: conseguir atualizar o details pra quando você cria uma produção, ele indentifcar que mesmo sem ações, aquilo ali ta ativo e é pra aprecer igual na primeira parte do if da _table, EU TENHO QUE PASSAR O OBJETO INTEIRO NA DETAILS, E VER SE A PRODUÇÃO TA ATIVA PARA CAIR NO IF */
-
-            $.ajax({
-                url: 'Producao/Details',
-                type: 'POST',
-                data: { DS: $(this).data("quadrante") },
-                success: function (partialView) {
-                    console.log("parte 2 - ");
-                    $('#detailsPlace').html(partialView);
-
-                }
             });
 
         });
@@ -127,15 +122,80 @@
 
 
         $("#finishProducao").click(function () {
-            CriarVenda();
+
+            if ($("#txtKgRendido").val() == '') {
+                toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Digite a quantidade de Kg rendido</b></h4>');
+                $("#txtKgRendido").focus();
+                return;
+            }
+
+            jsonDataFinish = {
+                ID_Producao: parseInt($(this).data("idproducao")),
+                KG_Rendido: parseFloat($("#txtKgRendido").val())
+            };
+
+
+            $.ajax({
+                type: "POST",
+                url: "Producao/dltProducao",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(jsonDataFinish),
+                success: function (data) {
+                    var json = $.parseJSON(data);
+                    if (json == false || json == null) {
+                        toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Erro ao finalizar produção</b></h4>');
+                    }
+                    else {
+                        toasterSuccess('<h4><i class=\"fa fa-check\">&nbsp;</i><b> Produção finalizada com sucesso</b></h4>');
+                        $('#detailsPlace').html('');
+                        window.location.href = "";
+                    }
+                },
+                error: function () { alert('Error') }
+            });
+
         });
-        $("#plplusProducaousVenda").click(function () {
-            CriarVenda();
+
+        $("#plusAcao").on('click', function () {
+
+            if ($("#txtAcao").val().trim() == "") {
+                toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Digite a ação realizada</b></h4>');
+                $("#txtAcao").focus();
+                return;
+            }
+
+            var jsonData = {
+                ID_PRODUCAO: parseInt($(this).data("idproducao")), // obligated
+                ID_FUNC: localStorage.getItem("FuncionarioID"), // obligated
+                DS_ACAO: $("#txtAcao").val(),
+                ID_QUADRANTE: parseInt($(this).data("idquadrante"))
+            };
+            console.clear();
+            console.log(jsonData);
+
+            $.ajax({
+                type: "POST",
+                url: "Producao/InsAcaoProducao",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(jsonData),
+                success: function (partialView) {
+                    toasterSuccess('<h4><i class=\"fa fa-check\">&nbsp;</i><b> Ação adicionada com sucesso</b></h4>');
+                    $('#detailsPlace').html('');
+                    $('#detailsPlace').show();
+                    $('#detailsPlace').html(partialView);
+                    $("#txtAcao").val('');
+                    attachEventHandlers();
+                },
+                error: function (partialView) {
+                    toasterWarning('<h4><i class=\"fa fa-exclamation-triangle\">&nbsp;</i><b> Erro ao adicionar ação</b></h4>');
+                    console.log(partialView)
+                }
+            });
         });
-        
-        
-        
-        
-        
+
+
+
+
     }
 </script>

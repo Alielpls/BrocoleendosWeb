@@ -8,5 +8,7 @@ namespace Brocoleendo.ViewModel
         public List<AcaoQuadrante> AcaoQuadrantes { get; set; }
         public int ProdutoSelecionadoID { get; set; }
         public List<Produto> Produtos { get; set; }
+        public Producao producao { get; set; }
+
     }
 }

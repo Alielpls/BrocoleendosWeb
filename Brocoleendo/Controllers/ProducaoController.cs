@@ -20,7 +20,7 @@ namespace Brocoleendo.Controllers
             _client = new HttpClient();
             _client.BaseAddress = baseAddress;
         }
-        
+
         public IActionResult Index()
         {
             List<Quadrante> Quadrantes = new List<Quadrante>();
@@ -34,38 +34,59 @@ namespace Brocoleendo.Controllers
                     Quadrantes = JsonConvert.DeserializeObject<List<Quadrante>>(data);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
             }
-            
+
             ViewData["Title"] = "Produção";
             return View(Quadrantes);
         }
 
-        
-        public ActionResult Details(int DS)
+        [HttpPost]
+        public ActionResult Details([FromBody] Quadrante quadrante)
         {
-            if (DS == null)
+
+            if (quadrante.ID_Localizacao_Lote == null)
             {
                 return null;
             }
-            List<AcaoQuadrante> Quadrantes = new List<AcaoQuadrante>();
+            List<AcaoQuadrante> AcoesQuadrante = new List<AcaoQuadrante>();
             try
             {
-                HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "GetAcoesQuadrante/" + DS).Result;
+                HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "GetAcoesQuadrante/" + quadrante.ID_Localizacao_Lote).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
                     string data = response.Content.ReadAsStringAsync().Result;
-                    Quadrantes = JsonConvert.DeserializeObject<List<AcaoQuadrante>>(data);
+                    AcoesQuadrante = JsonConvert.DeserializeObject<List<AcaoQuadrante>>(data);
                 }
             }
             catch (Exception ex)
             {
             }
 
-            ProducaoViewModel viewModel = new ProducaoViewModel();
-            viewModel.AcaoQuadrantes = Quadrantes;
+            Producao producaoAtual = new Producao();
 
+            if (quadrante.ID_Producao > 0)
+            {
+                try
+                {
+                    HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "DetailsProducao/" + quadrante.ID_Producao).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string data = response.Content.ReadAsStringAsync().Result;
+                        producaoAtual = JsonConvert.DeserializeObject<Producao>(data);
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            ProducaoViewModel viewModel = new ProducaoViewModel();
+            viewModel.AcaoQuadrantes = AcoesQuadrante;
+            viewModel.producao = producaoAtual;
             List<Produto> produtos = new List<Produto>();
 
             try
@@ -81,20 +102,33 @@ namespace Brocoleendo.Controllers
             catch (Exception ex)
             {
             }
-
             viewModel.Produtos = produtos;
 
-            ViewData["Message"] = DS;
-            //ViewData["Uso"] = ;
+            HttpResponseMessage responseProd = _client.GetAsync(_client.BaseAddress + "DetailProduto/" + producaoAtual.ID_Produto).Result;
+            Produto produto = new Produto();
+
+            if (responseProd.IsSuccessStatusCode)
+            {
+                string data = responseProd.Content.ReadAsStringAsync().Result;
+                produto = JsonConvert.DeserializeObject<Produto>(data);
+            }
+
+
+            ViewData["Produto"] = produto.DS_PRODUTO;
+            ViewData["ID"] = quadrante.ID_Localizacao_Lote;
             ViewData["Title"] = "Produção";
             return PartialView("_table", viewModel);
         }
 
 
         [HttpPost]
-        public ActionResult InsProducao([FromBody] Producao producao)
+        public ActionResult InsProducao([FromBody] insProducao producao)
         {
-            var jsonFunc = JsonConvert.SerializeObject(producao);
+            Producao producaoEnviar = new Producao();
+            producaoEnviar.ID_LOCALIZACAO_LOTE = producao.ID_Localizacao_Lote;
+            producaoEnviar.ID_Produto = producao.ID_Produto;
+
+            var jsonFunc = JsonConvert.SerializeObject(producaoEnviar);
             var content = new StringContent(jsonFunc, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "InsProducao", content).Result;
@@ -111,9 +145,13 @@ namespace Brocoleendo.Controllers
         }
 
         [HttpPost]
-        public ActionResult dltProducao([FromBody] Producao producao)
+        public ActionResult dltProducao([FromBody] insProducaoFinish producao)
         {
-            var jsonFunc = JsonConvert.SerializeObject(producao);
+            Producao producaoEnviar = new Producao();
+            producaoEnviar.ID_PRODUCAO = producao.ID_Producao;
+            producaoEnviar.KG_RENDIDO = producao.KG_Rendido;
+
+            var jsonFunc = JsonConvert.SerializeObject(producaoEnviar);
             var content = new StringContent(jsonFunc, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "dltProducao", content).Result;
@@ -129,26 +167,57 @@ namespace Brocoleendo.Controllers
             return Json(0);
         }
 
-
         [HttpPost]
-        public ActionResult InsAcaoProducao([FromBody] AcaoQuadrante acaoQuadrante)
+        public ActionResult InsAcaoProducao([FromBody] insAcaoQuadrante acaoQuadrante)
         {
-            var jsonFunc = JsonConvert.SerializeObject(acaoQuadrante);
+            ProducaoViewModel viewModel = new ProducaoViewModel();
+            AcaoQuadrante AcaoQuadranteEnviar = new AcaoQuadrante();
+            AcaoQuadranteEnviar.ID_PRODUCAO = acaoQuadrante.ID_Producao;
+            AcaoQuadranteEnviar.ID_FUNC = acaoQuadrante.ID_FUNC;
+            AcaoQuadranteEnviar.DS_ACAO = acaoQuadrante.DS_ACAO;
+
+
+            var jsonFunc = JsonConvert.SerializeObject(AcaoQuadranteEnviar);
             var content = new StringContent(jsonFunc, Encoding.UTF8, "application/json");
-
             HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "InsAcaoProducao", content).Result;
-
 
             if (response.IsSuccessStatusCode)
             {
                 string data = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response1 = _client.GetAsync(_client.BaseAddress + "GetAcoesQuadrante/" + acaoQuadrante.ID_QUADRANTE).Result;
+                if (response1.IsSuccessStatusCode)
+                {
+                    string data1 = response1.Content.ReadAsStringAsync().Result;
+                    List<AcaoQuadrante> jsonFunc1 = JsonConvert.DeserializeObject<List<AcaoQuadrante>>(data1);
+                    viewModel.AcaoQuadrantes = jsonFunc1;
 
-                HttpResponseMessage response1 = _client.GetAsync(_client.BaseAddress + "GetAcoesQuadrante/" + acaoQuadrante.DS_QUADRANTE).Result;
-                string data1 = response1.Content.ReadAsStringAsync().Result;
 
-                List<VendaProduto> jsonFunc1 = JsonConvert.DeserializeObject<List<VendaProduto>>(data1);
-                return PartialView("_table", jsonFunc1);
-                
+                    HttpResponseMessage response2 = _client.GetAsync(_client.BaseAddress + "DetailsProducao/" + acaoQuadrante.ID_Producao).Result;
+
+                    if (response2.IsSuccessStatusCode)
+                    {
+                        string data2 = response2.Content.ReadAsStringAsync().Result;
+                        Producao producaoAtual = JsonConvert.DeserializeObject<Producao>(data2);
+                        viewModel.producao = producaoAtual;
+                        viewModel.Produtos = new List<Produto>();
+                        viewModel.ProdutoSelecionadoID = 0;
+
+                        HttpResponseMessage responseProd = _client.GetAsync(_client.BaseAddress + "DetailProduto/" + producaoAtual.ID_Produto).Result;
+                        Produto produto = new Produto();
+
+                        if (responseProd.IsSuccessStatusCode)
+                        {
+                            string dataprod = responseProd.Content.ReadAsStringAsync().Result;
+                            produto = JsonConvert.DeserializeObject<Produto>(dataprod);
+                        }
+
+
+                        ViewData["Produto"] = produto.DS_PRODUTO;
+                        ViewData["ID"] = acaoQuadrante.ID_QUADRANTE;
+                        ViewData["Title"] = "Produção";
+                        return PartialView("_table", viewModel);
+                    }
+                }
             }
 
 

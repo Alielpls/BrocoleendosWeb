@@ -1,10 +1,10 @@
 ﻿@using Brocoleendo.ViewModel
 @model ProducaoViewModel
 
-@if (Model.AcaoQuadrantes.Count > 0)
+@if (Model.producao.ID_PRODUCAO > 0)
 {
     <div>
-        <h4 class="centered">Atividades realizadas</h4>
+        <h4 class="centered">Atividades realizadas - @ViewData["Produto"]</h4>
     </div>
     <div>
         <table class="table table-condensed">
@@ -12,7 +12,6 @@
                 <th>Ação</th>
                 <th>Data/Hora</th>
                 <th>Funcionario</th>
-                <th>Material usado</th>
             </tr>
             @foreach (var item in Model.AcaoQuadrantes)
             {
@@ -20,17 +19,22 @@
                     <th>@item.DS_ACAO</th>
                     <th>@item.DT_ACAO</th>
                     <th>@item.NOME_FUNC</th>
-                    <th>@item.DS_MATERIAL</th>
                 </tr>
             }
         </table>
     </div>
     <div class="row">
-        <div class="col-12 col-sm-6 col-md-6">
-            <a id="plusAcao" class="btn btn-primary butn"> <i class="fa fa-plus"></i> </a>
+        <div class="col-12 col-sm-6 col-md-6" style="border-right:solid">
+            <label for="txtAcao" class="form-label">Registrar ação</label>
+            <input id="txtAcao" class="form-control" type="text" maxlength="50" />
+            <br />
+            <a id="plusAcao" data-idproducao="@Model.producao.ID_PRODUCAO" data-idquadrante="@Convert.ToInt32(ViewData["ID"])" class="btn btn-primary butn"> <i class="fa fa-plus"></i> </a>
         </div>
         <div class="col-12 col-sm-6 col-md-6">
-            <a id="finishProducao" class="btn btn-success butn"> <i class="fa fa-check"></i> </a>
+            <label for="txtAcao" class="form-label">Rendimento</label>
+            <input id="txtKgRendido" class="form-control" type="number" step="0.010" />
+            <br />
+            <a id="finishProducao" data-idproducao="@Model.producao.ID_PRODUCAO" data-idquadrante="@Convert.ToInt32(ViewData["ID"])" class="btn btn-success butn"> <i class="fa fa-check"></i> </a>
         </div>
     </div>
 }
@@ -38,7 +42,7 @@ else
 {
     <div class="row">
         <div class="col-12 col-sm-12 col-md-12">
-            <a id="plusProducao" data-quadrante="@ViewData["Message"]" data-idQuadrante="@Convert.ToInt32(ViewData["ID"])" class="btn btn-success butn"> <i class="fa fa-plus"></i> </a>
+            <a id="plusProducao" data-idquadrante="@Convert.ToInt32(ViewData["ID"])" class="btn btn-success butn"> <i class="fa fa-plus"></i> </a>
         </div>
         <div class="col-12 col-sm-12 col-md-12">
             <select id="ProdutoSelecionadoID" class="form-control butn">
